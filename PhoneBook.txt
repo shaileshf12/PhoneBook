@@ -1,0 +1,223 @@
+
+
+import java.util.*;
+
+class Node
+{
+	String name;
+	String number;
+	Node left;
+	Node right;
+	
+	Node(String name, String number)
+	{
+		this.name=name;
+		this.number=number;
+		left=right=null;
+	}
+}
+
+class Activities{
+
+
+	public Node insertKey(Node root, String name, String number) {
+		// TODO Auto-generated method stub
+		if(root==null)
+		{
+			return new Node(name, number);
+		}
+		
+		if(name.compareToIgnoreCase(root.name)<0)
+		{
+			root.left = insertKey(root.left, name, number);
+		}
+		else if(name.compareToIgnoreCase(root.name)>0)
+		{
+			root.right = insertKey(root.right, name, number);
+		}
+		else
+		{
+			System.out.println("Data already exits");
+		}
+		
+		return root;
+	
+	}
+	
+	
+	public Node deleteNode(Node root, String name)
+	{
+		if(root==null)
+		{
+			return null;
+		}
+		
+		if(name.compareTo(root.name)<0)
+		{
+			root.left = deleteNode(root.left, name);
+		}
+		else if(name.compareTo(root.name)>0)
+		{
+			root.right = deleteNode(root.right, name);
+		}
+		else
+		{
+			if(root.right==null)
+			{
+				return root.left;
+			}
+			else if(root.left == null)
+			{
+				return root.right;
+			}
+			else
+			{
+				root.name = minValue(root.right);
+				
+				root.right = deleteNode(root.right, root.name);
+			}
+		}
+		return root;
+	}
+
+
+	private String minValue(Node root) {
+		// TODO Auto-generated method stub
+        String min = root.name;
+		
+		while(root.left!=null)
+		{
+			min = root.left.name;
+			root=root.left;
+		}
+		
+		return min;
+	}
+	
+	
+	public void display(Node root)
+	{
+		if(root==null)
+		{
+			return;
+		}
+		
+		display(root.left);
+		System.out.println(root.name+" : "+root.number);
+		display(root.right);
+	}
+	
+	public void searchData(String name, Node root, ArrayList<Node> al) {
+		// TODO Auto-generated method stub
+		
+		if(root==null)
+		{
+			return;
+		}
+		
+		
+		searchData(name, root.left, al);
+		
+		if(root.name.toLowerCase().contains(name))
+		{
+			al.add(root);
+		}
+		
+		searchData(name, root.right, al);
+		
+
+	}
+
+	
+}
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.println();
+		System.out.println("---- Instructions----");
+		System.out.println("1 : To add a number");
+		System.out.println("2 : To delete a number");
+		System.out.println("3 : To search a number");
+		System.out.println("4 : To display all numbers");
+		System.out.println("5 : To come out off the Phone book");
+		
+		Node root = null;
+		Activities ac = new Activities();
+		abc : while(true)
+		{
+			System.out.println();
+			System.out.print("Enter a command : ");
+			int command = sc.nextInt();
+			
+			switch(command) {
+			
+			case 1 : 
+				
+				System.out.print("Enter a Phone Number : ");
+				String number = sc.next();
+				
+				String fname = sc.nextLine();
+				System.out.print("Enter a Name : ");
+				String name = sc.nextLine();
+				
+				root = ac.insertKey(root, name, number);
+				
+				break;
+				
+			case 2 : 
+				
+				System.out.println();
+				System.out.print("Enter a name to be deleted : ");
+				String newName =sc.next();
+				
+				root = ac.deleteNode(root, newName);
+				break;
+				
+			case 3 :
+				
+				System.out.println();
+				System.out.println("Enter Name to be searched");
+				String nam = sc.next();
+				
+				ArrayList<Node> al =new ArrayList<Node>();
+				
+				ac.searchData(nam.toLowerCase(), root, al);
+				
+				if(al.isEmpty())
+				{
+					System.out.println("Name not found");
+				}
+				
+				for(int i=0;i<al.size();i++)
+				{
+					System.out.println(al.get(i).name+" : "+al.get(i).number);
+				}
+				break;
+				
+			case 4 : 
+				
+				System.out.println();
+				System.out.println("All Contacts");
+				ac.display(root);
+				break;
+				
+			case 5 :
+				
+				System.out.println("Successfull exit from phone book");
+				break abc;
+				
+			default :
+				
+				System.out.println("Enter a valid command");
+			}
+			
+		}
+		
+			
+	}
+
+}
